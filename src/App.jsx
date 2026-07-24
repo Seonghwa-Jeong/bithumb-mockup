@@ -9,6 +9,7 @@ import Exchange from './pages/Exchange.jsx'
 import Portfolio from './pages/Portfolio.jsx'
 import Orders from './pages/Orders.jsx'
 import Wallet from './pages/Wallet.jsx'
+import DevTools from './components/DevTools.jsx'
 
 function RequireAuth({ children }) {
   const { user } = useAuth()
@@ -59,6 +60,7 @@ function Shell() {
           <Route path="*" element={<Navigate to="/market" replace />} />
         </Routes>
       </main>
+      <DevTools />
     </>
   )
 }

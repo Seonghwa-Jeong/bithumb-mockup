@@ -160,6 +160,8 @@ payload 미지정 키는 코드의 fallback 값이 그대로 쓰입니다(부분
 
 **Experiment 재평가(fetch) 시점** — identity/사용자 속성이 바뀌는 모든 지점에서 `fetchExperiment()` 를 호출합니다: 앱 첫 로딩 · 로그인 · 로그아웃 · 회원가입 · 계좌 등록(초기화) · 세션 타임아웃.
 
+**실험 도구(DevTools) 패널** — 우하단 🧪 버튼으로 열고 닫습니다. device id 변경(실험 재배정 테스트), 현재 적용된 변형/payload 확인, 강제 override, `fetch` 재평가를 화면에서 바로 할 수 있습니다.
+
 키가 없을 때도 콘솔에서 변형·payload 를 강제해 눈으로 확인할 수 있습니다.
 
 ```js
