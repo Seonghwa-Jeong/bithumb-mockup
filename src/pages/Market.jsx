@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMarket } from '../context/MarketContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { COIN_MAP } from '../lib/market.js'
-import { formatPrice, formatPct, formatVolume } from '../lib/format.js'
+import { formatPrice, formatPct, formatVolume, formatKRW } from '../lib/format.js'
 import { track, getPayload } from '../lib/amplitude.js'
 import Sparkline from '../components/Sparkline.jsx'
 
@@ -20,12 +20,15 @@ export default function Market() {
   const navigate = useNavigate()
 
   // Remote config: 비로그인 랜딩 히어로 배너 문구/CTA 를 원격 제어
+  // body 의 {bonus} 플레이스홀더에는 welcome-bonus 실험의 금액을 주입 → 두 실험 공존
   const hero = getPayload('market-hero', {
     eyebrow: 'No.1 디지털 자산 거래소',
     title: '대한민국 대표 디지털 자산 거래소, bithumb',
-    body: '로그인 없이 실시간 시세를 먼저 둘러보세요. 지금 가입하면 실습용 원화 1,000,000원을 드려요.',
+    body: '로그인 없이 실시간 시세를 먼저 둘러보세요. 지금 가입하면 실습용 원화 {bonus}을 드려요.',
     cta: '회원가입하고 시작하기',
   })
+  const welcomeBonus = getPayload('welcome-bonus', { amount_krw: 1_000_000 }).amount_krw
+  const heroBody = (hero.body || '').replaceAll('{bonus}', formatKRW(welcomeBonus))
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState({ key: 'volume24', dir: 'desc' })
   const [favorites, setFavorites] = useState(() => {
@@ -101,7 +104,7 @@ export default function Market() {
           <div className="promo-text">
             <span className="promo-eyebrow">{hero.eyebrow}</span>
             <h1>{hero.title}</h1>
-            <p>{hero.body}</p>
+            <p>{heroBody}</p>
             <div className="promo-cta">
               <button
                 className="btn-primary"
