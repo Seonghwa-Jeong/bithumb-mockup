@@ -1372,6 +1372,151 @@ code {
   color: var(--text-3);
 }
 
+/* ---------- 실험 디버그 도구 (DevTools) ---------- */
+.devtools-fab {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: #1b1d1f;
+  color: #fff;
+  font-size: 22px;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+}
+.devtools-fab:hover {
+  background: #000;
+}
+.devtools {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 340px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  overflow: hidden;
+}
+.devtools-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #1b1d1f;
+  color: #fff;
+}
+.devtools-head strong {
+  font-size: 14px;
+}
+.devtools-x {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  line-height: 1;
+}
+.devtools-body {
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.devtools-body h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-3);
+}
+.dt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.dt-label {
+  font-size: 12px;
+  color: var(--text-2);
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+.dt-code {
+  font-size: 11px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dt-input {
+  width: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 7px 9px;
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--text);
+  background: #fff;
+}
+.dt-input:focus {
+  outline: none;
+  border-color: var(--brand);
+}
+.dt-json {
+  resize: vertical;
+  line-height: 1.4;
+}
+.dt-btns {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+.dt-hint {
+  font-size: 11px;
+  color: var(--text-3);
+  margin: 8px 0 0;
+}
+.dt-flag {
+  padding: 10px 0;
+  border-top: 1px solid var(--surface-2);
+}
+.dt-flag-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.dt-flag-name {
+  font-size: 13px;
+  font-weight: 700;
+}
+.dt-flag-name em {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 500;
+}
+.dt-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: #fff4dc;
+  color: var(--brand-dark);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+.dt-refetch {
+  width: 100%;
+}
+
 /* ---------- 반응형 ---------- */
 @media (max-width: 1180px) {
   .exchange {

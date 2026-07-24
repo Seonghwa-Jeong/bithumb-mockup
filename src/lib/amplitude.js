@@ -83,9 +83,9 @@ export function track(eventName, eventProperties = {}) {
 export function fetchExperiment(reason = 'manual') {
   if (!experimentClient) {
     console.log('[experiment] fetch skipped (no client) — reason:', reason)
-    return
+    return Promise.resolve()
   }
-  experimentClient
+  return experimentClient
     .fetch()
     .catch((e) => console.warn('[Experiment] fetch 실패', 'reason:', reason, e))
 }
@@ -159,7 +159,62 @@ export function forcePayload(flagKey, payloadObj) {
   localStorage.setItem(`exp_payload_${flagKey}`, JSON.stringify(payloadObj))
 }
 
+/** 데모용: 특정 플래그의 강제 override(변형/payload) 해제 */
+export function clearOverride(flagKey) {
+  localStorage.removeItem(`exp_force_${flagKey}`)
+  localStorage.removeItem(`exp_payload_${flagKey}`)
+}
+
+// ---- DevTools(실험 디버그 패널) 용 헬퍼 --------------------------------
+/** 앱에서 사용하는 플래그 목록 (디버그 패널 표시용) */
+export const KNOWN_FLAGS = [
+  { key: 'login-headline', type: 'variant', label: '로그인 헤드라인' },
+  { key: 'buy-cta', type: 'payload', label: '매수 CTA' },
+  { key: 'welcome-bonus', type: 'payload', label: '웰컴 보너스' },
+  { key: 'market-hero', type: 'payload', label: '마켓 히어로' },
+]
+
+export function getDeviceId() {
+  if (analyticsReady) return amplitude.getDeviceId() || null
+  return localStorage.getItem('demo_device_id')
+}
+
+/** device_id 변경 → identity 가 바뀌므로 Experiment 재평가 (promise 반환) */
+export function setDeviceId(id) {
+  if (analyticsReady) amplitude.setDeviceId(id)
+  else localStorage.setItem('demo_device_id', id)
+  return fetchExperiment('device_id_change')
+}
+
+export function getUserId() {
+  return analyticsReady ? amplitude.getUserId() || null : null
+}
+
+/** 서버에서 실제 배정된 변형 전체 (experiment 클라이언트 없으면 null) */
+export function getAllVariants() {
+  return experimentClient ? experimentClient.all() : null
+}
+
+/** 이 플래그에 로컬 강제 override 가 걸려 있는지 */
+export function hasOverride(flagKey) {
+  return (
+    localStorage.getItem(`exp_force_${flagKey}`) != null ||
+    localStorage.getItem(`exp_payload_${flagKey}`) != null
+  )
+}
+
 // 콘솔에서 손쉽게 A/B·remote config 를 토글할 수 있도록 전역 노출 (데모 편의)
 if (typeof window !== 'undefined') {
-  window.__bithumbExp = { getVariant, getPayload, forceVariant, forcePayload, fetchExperiment }
+  window.__bithumbExp = {
+    getVariant,
+    getPayload,
+    forceVariant,
+    forcePayload,
+    clearOverride,
+    fetchExperiment,
+    getDeviceId,
+    setDeviceId,
+    getUserId,
+    getAllVariants,
+  }
 }
