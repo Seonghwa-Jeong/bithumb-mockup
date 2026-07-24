@@ -1,12 +1,15 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMarket } from '../context/MarketContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import { COIN_MAP } from '../lib/market.js'
+import { TIERS, nextTier } from '../lib/tiers.js'
 import { formatKRW, formatCoin, formatPrice, formatPct } from '../lib/format.js'
 import { track } from '../lib/amplitude.js'
 
 export default function Portfolio() {
   const { portfolio, tickers, totals, resetAccount } = useMarket()
+  const { user } = useAuth()
   const navigate = useNavigate()
 
   const holdings = useMemo(() => {
@@ -27,6 +30,10 @@ export default function Portfolio() {
   if (!portfolio) return null
 
   const up = totals.pnl >= 0
+  const tierKey = user?.tier || 'WHITE'
+  const tier = TIERS[tierKey]
+  const nxt = nextTier(tierKey)
+  const vol = user?.monthlyVolume ?? 0
 
   return (
     <div className="page">
@@ -40,6 +47,30 @@ export default function Portfolio() {
         >
           계좌 초기화
         </button>
+      </div>
+
+      <div className="tier-card">
+        <div className="tier-card-main">
+          <span className={`tier tier-${tierKey.toLowerCase()} lg`}>{tier.label}</span>
+          <div className="tc-name">
+            <strong>{user?.nickname} 님의 등급</strong>
+            <span>전월 거래금액 {formatKRW(vol)} 기준</span>
+          </div>
+        </div>
+        <div className="tier-benefits">
+          <div>
+            <span>거래포인트</span>
+            <strong>{tier.tradePointPct}%</strong>
+          </div>
+          <div>
+            <span>메이커 리워드</span>
+            <strong>{tier.makerRewardPct ? `${tier.makerRewardPct}%` : '—'}</strong>
+          </div>
+          <div>
+            <span>{nxt ? `다음 등급 · ${nxt.label}` : '최고 등급'}</span>
+            <strong>{nxt ? `${formatKRW(nxt.minVolume - vol)} 남음` : '달성 🎉'}</strong>
+          </div>
+        </div>
       </div>
 
       <div className="summary-cards">

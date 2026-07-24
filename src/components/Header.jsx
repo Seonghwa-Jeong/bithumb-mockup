@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useMarket } from '../context/MarketContext.jsx'
 import { formatKRW } from '../lib/format.js'
+import { TIERS } from '../lib/tiers.js'
 import { track } from '../lib/amplitude.js'
 
 const NAV = [
@@ -53,7 +54,9 @@ export default function Header() {
                 <span className="total-asset-value">{formatKRW(totals.totalValue)}</span>
               </div>
               <div className="user-chip">
-                <span className={`tier tier-${user.tier?.toLowerCase()}`}>{user.tier}</span>
+                <span className={`tier tier-${user.tier?.toLowerCase()}`}>
+                  {TIERS[user.tier]?.label || user.tier}
+                </span>
                 <span className="nickname">{user.nickname}</span>
               </div>
               <button className="btn-ghost" onClick={logout}>

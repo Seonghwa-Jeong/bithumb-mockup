@@ -31,6 +31,7 @@ export function AuthProvider({ children }) {
       identifyUser(user.id, {
         nickname: user.nickname,
         tier: user.tier,
+        monthly_trade_volume_krw: user.monthlyVolume ?? 0,
         signup_source: user.source || 'test_account',
       })
     } else {
@@ -89,14 +90,15 @@ export function AuthProvider({ children }) {
       nickname,
       password,
       krw: 1_000_000, // 신규 가입 축하금
-      tier: 'BASIC',
+      monthlyVolume: 0, // 신규 → 전월 거래금액 0 → 화이트
+      tier: 'WHITE',
       source: 'signup',
     }
     localStorage.setItem(USERS_KEY, JSON.stringify([...users, newUser]))
     const { password: _pw, ...safe } = newUser
     setUser(safe)
     track('Signup Completed', {
-      user_tier: 'BASIC',
+      user_tier: 'WHITE',
       welcome_bonus_krw: 1_000_000,
       location: 'signup_page',
     })

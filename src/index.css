@@ -202,14 +202,83 @@ code {
   color: #fff;
   background: var(--text-3);
 }
-.tier-vip {
+/* 빗썸 등급 색상 (화이트 → 블랙) */
+.tier-white {
+  background: #eceff2;
+  color: #4b5563;
+}
+.tier-blue {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+.tier-green {
+  background: linear-gradient(135deg, #10b981, #047857);
+}
+.tier-purple {
   background: linear-gradient(135deg, #8b5cf6, #6d28d9);
 }
-.tier-gold {
-  background: linear-gradient(135deg, #f7a600, #d98800);
+.tier-orange {
+  background: linear-gradient(135deg, #f97316, #ea580c);
 }
-.tier-basic {
-  background: #9aa0a6;
+.tier-black {
+  background: linear-gradient(135deg, #374151, #111827);
+}
+.tier.lg {
+  font-size: 13px;
+  padding: 5px 12px;
+  border-radius: 8px;
+}
+
+/* 등급 카드 (투자내역) */
+.tier-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.tier-card-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.tier-card-main .tc-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.4;
+}
+.tier-card-main .tc-name strong {
+  font-size: 16px;
+}
+.tier-card-main .tc-name span {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.tier-benefits {
+  display: flex;
+  gap: 28px;
+}
+.tier-benefits > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.tier-benefits span {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.tier-benefits strong {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 720px) {
+  .tier-benefits {
+    gap: 18px;
+  }
 }
 
 /* ---------- 버튼 ---------- */
