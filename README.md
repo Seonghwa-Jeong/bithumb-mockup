@@ -154,9 +154,11 @@ VITE_EXPERIMENT_DEPLOYMENT_KEY=<Experiment "Web"(client-side) Deployment Key>
 | --- | --- | --- |
 | `buy-cta` | `{ "label": "지금 매수하기", "emphasis": true }` | 매수 버튼 문구·강조 (로그인 사용자) |
 | `welcome-bonus` | `{ "amount_krw": 2000000 }` | 신규 가입 축하금 (가입 퍼널) |
-| `market-hero` | `{ "eyebrow": "...", "title": "...", "body": "...", "cta": "..." }` | 비로그인 랜딩 히어로 |
+| `market-hero` | `{ "eyebrow": "...", "title": "...", "body": "...{bonus}...", "cta": "..." }` | 비로그인 랜딩 히어로 |
 
 payload 미지정 키는 코드의 fallback 값이 그대로 쓰입니다(부분 지정 가능).
+
+`market-hero.body` 안의 `{bonus}` 는 `welcome-bonus.amount_krw` 값으로 치환됩니다. 덕분에 두 실험이 충돌 없이 공존합니다 — 히어로 문구 구조는 `market-hero` 가, 금액은 `welcome-bonus` 가 각각 제어합니다.
 
 **Experiment 재평가(fetch) 시점** — identity/사용자 속성이 바뀌는 모든 지점에서 `fetchExperiment()` 를 호출합니다: 앱 첫 로딩 · 로그인 · 로그아웃 · 회원가입 · 계좌 등록(초기화) · 세션 타임아웃.
 
