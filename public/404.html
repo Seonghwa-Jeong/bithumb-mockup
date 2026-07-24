@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Bithumb Mockup</title>
+    <!--
+      GitHub Pages SPA 폴백 — 존재하지 않는 경로(딥링크/새로고침)를 index.html 로 넘기면서
+      원래 경로를 쿼리스트링으로 인코딩한다. index.html 의 스크립트가 이를 되돌린다.
+      pathSegmentsToKeep=1: 프로젝트 페이지의 /<repo>/ 세그먼트를 보존.
+    -->
+    <script type="text/javascript">
+      var pathSegmentsToKeep = 1
+      var l = window.location
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname
+            .split('/')
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join('/') +
+          '/?/' +
+          l.pathname
+            .slice(1)
+            .split('/')
+            .slice(pathSegmentsToKeep)
+            .join('/')
+            .replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash,
+      )
+    </script>
+  </head>
+  <body></body>
+</html>

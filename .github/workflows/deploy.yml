@@ -1,0 +1,51 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 동시 배포 방지 (진행 중이던 배포는 취소)
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+        env:
+          # 프로젝트 페이지의 base 경로를 저장소명으로 자동 설정 (/<repo>/)
+          VITE_BASE: /${{ github.event.repository.name }}/
+          # Amplitude 키 — 저장소 Variables 에 등록해 주입 (로컬 .env.local 과 동일 값).
+          # Settings > Secrets and variables > Actions > Variables 에서 추가하거나:
+          #   gh variable set VITE_AMPLITUDE_API_KEY --body <api-key>
+          #   gh variable set VITE_EXPERIMENT_DEPLOYMENT_KEY --body <web-deployment-key>
+          VITE_AMPLITUDE_API_KEY: ${{ vars.VITE_AMPLITUDE_API_KEY }}
+          VITE_EXPERIMENT_DEPLOYMENT_KEY: ${{ vars.VITE_EXPERIMENT_DEPLOYMENT_KEY }}
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
