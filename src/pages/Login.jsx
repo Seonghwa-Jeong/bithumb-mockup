@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { TEST_ACCOUNTS } from '../lib/accounts.js'
+import { TIERS } from '../lib/tiers.js'
 import { getVariant, track } from '../lib/amplitude.js'
 import { formatKRW } from '../lib/format.js'
 
@@ -86,7 +87,9 @@ export default function Login() {
                 className="test-account"
                 onClick={() => quickLogin(a.id)}
               >
-                <span className={`tier tier-${a.tier.toLowerCase()}`}>{a.tier}</span>
+                <span className={`tier tier-${a.tier.toLowerCase()}`}>
+                  {TIERS[a.tier]?.label || a.tier}
+                </span>
                 <strong>{a.nickname}</strong>
                 <span className="ta-id">{a.email}</span>
                 <span className="ta-krw">보유원화 {formatKRW(a.krw)}</span>
