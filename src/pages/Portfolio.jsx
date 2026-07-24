@@ -104,7 +104,13 @@ export default function Portfolio() {
         {holdings.length === 0 ? (
           <div className="empty">
             보유한 코인이 없습니다.{' '}
-            <button className="link-btn" onClick={() => navigate('/market')}>
+            <button
+              className="link-btn"
+              onClick={() => {
+                track('Empty State CTA Clicked', { destination: 'market', location: 'portfolio' })
+                navigate('/market')
+              }}
+            >
               거래하러 가기 →
             </button>
           </div>

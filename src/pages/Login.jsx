@@ -73,7 +73,13 @@ export default function Login() {
         </form>
 
         <p className="auth-switch">
-          아직 회원이 아니신가요? <Link to="/signup">회원가입</Link>
+          아직 회원이 아니신가요?{' '}
+          <Link
+            to="/signup"
+            onClick={() => track('Auth CTA Clicked', { cta: 'signup', location: 'login_page' })}
+          >
+            회원가입
+          </Link>
         </p>
 
         <div className="test-accounts">

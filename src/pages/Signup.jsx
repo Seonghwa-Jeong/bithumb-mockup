@@ -103,7 +103,13 @@ export default function Signup() {
         </form>
 
         <p className="auth-switch">
-          이미 계정이 있으신가요? <Link to="/login">로그인</Link>
+          이미 계정이 있으신가요?{' '}
+          <Link
+            to="/login"
+            onClick={() => track('Auth CTA Clicked', { cta: 'login', location: 'signup_page' })}
+          >
+            로그인
+          </Link>
         </p>
       </div>
     </div>

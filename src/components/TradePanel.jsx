@@ -73,6 +73,18 @@ export default function TradePanel({ symbol, pickedPrice }) {
     setPrice((p) => Math.max(tick, (Number(p) || 0) + dir * tick))
   }
 
+  function selectSide(next) {
+    if (next === side) return
+    setSide(next)
+    track('Order Side Changed', { symbol, side: next, location: 'exchange_trade_panel' })
+  }
+
+  function selectOrderType(next) {
+    if (next === orderType) return
+    setOrderType(next)
+    track('Order Type Changed', { symbol, order_type: next, location: 'exchange_trade_panel' })
+  }
+
   function submit(e) {
     e.preventDefault()
     if (!user) {
@@ -97,6 +109,13 @@ export default function TradePanel({ symbol, pickedPrice }) {
       })
       setAmount('')
     } else {
+      track('Order Submit Failed', {
+        symbol,
+        side,
+        order_type: orderType,
+        failure_reason: res.error,
+        location: 'exchange_trade_panel',
+      })
       setToast({ type: 'err', msg: res.error })
     }
     setTimeout(() => setToast(null), 2600)
@@ -107,13 +126,13 @@ export default function TradePanel({ symbol, pickedPrice }) {
       <div className="side-tabs">
         <button
           className={`side-tab buy ${side === 'buy' ? 'active' : ''}`}
-          onClick={() => setSide('buy')}
+          onClick={() => selectSide('buy')}
         >
           매수
         </button>
         <button
           className={`side-tab sell ${side === 'sell' ? 'active' : ''}`}
-          onClick={() => setSide('sell')}
+          onClick={() => selectSide('sell')}
         >
           매도
         </button>
@@ -124,7 +143,7 @@ export default function TradePanel({ symbol, pickedPrice }) {
           <button
             key={ty}
             className={orderType === ty ? 'type-tab active' : 'type-tab'}
-            onClick={() => setOrderType(ty)}
+            onClick={() => selectOrderType(ty)}
           >
             {ty === 'limit' ? '지정가' : '시장가'}
           </button>

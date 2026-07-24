@@ -23,7 +23,10 @@ export default function Header() {
         <div className="header-left">
           <button
             className="logo"
-            onClick={() => navigate('/market')}
+            onClick={() => {
+              track('Logo Clicked', { location: 'global_header' })
+              navigate('/market')
+            }}
             aria-label="홈으로"
           >
             <span className="logo-mark">B</span>
@@ -65,10 +68,22 @@ export default function Header() {
             </>
           ) : (
             <>
-              <button className="btn-ghost" onClick={() => navigate('/login')}>
+              <button
+                className="btn-ghost"
+                onClick={() => {
+                  track('Auth CTA Clicked', { cta: 'login', location: 'global_header' })
+                  navigate('/login')
+                }}
+              >
                 로그인
               </button>
-              <button className="btn-primary" onClick={() => navigate('/signup')}>
+              <button
+                className="btn-primary"
+                onClick={() => {
+                  track('Auth CTA Clicked', { cta: 'signup', location: 'global_header' })
+                  navigate('/signup')
+                }}
+              >
                 회원가입
               </button>
             </>

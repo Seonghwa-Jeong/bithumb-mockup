@@ -121,23 +121,27 @@ VITE_EXPERIMENT_DEPLOYMENT_KEY=<Experiment "Web"(client-side) Deployment Key>
 | --- | --- | --- |
 | `Login Succeeded` / `Login Failed` | `login_page` | method, user_tier / failure_reason |
 | `Signup Started` / `Completed` / `Failed` | `signup_page` | user_tier, welcome_bonus_krw / failure_reason |
+| `Auth CTA Clicked` | `global_header` · `login_page` · `signup_page` | cta(login/signup) |
 | `Logout` | `global_header` / `session_timeout` | reason |
 | `Session Timeout` | (무동작 30분) | idle_minutes, user_tier |
-| `Nav Item Clicked` | `global_header` | destination |
+| `Logo Clicked` / `Nav Item Clicked` | `global_header` | destination |
 | `Promo CTA Clicked` | `market_hero` | cta |
 | `Market Tab Changed` / `Market Sorted` | `market_list` | tab / sort_key, direction |
 | `Favorite Toggled` | `market_list` | symbol, coin_name, favorited |
 | `Coin Selected` | `market_list` · `exchange_sidebar` · `portfolio_holdings` | symbol, coin_name, (list_rank / holding_value_krw …) |
 | `Orderbook Price Selected` | `exchange_orderbook` | symbol, price |
+| `Order Side Changed` / `Order Type Changed` | `exchange_trade_panel` | symbol, side / order_type |
 | `Order Ratio Clicked` | `exchange_trade_panel` | symbol, side, percent, order_type |
 | `Trade Login Prompted` | `exchange_trade_panel` | symbol, side (비로그인 거래 시도) |
 | `Order Placed` | `exchange_trade_panel` | symbol, side, order_type, price, amount, notional_krw, fee_krw |
+| `Order Submit Failed` | `exchange_trade_panel` | symbol, side, order_type, failure_reason |
 | `Order Filled` | `fill_engine` | fill_price, notional_krw, fee_krw, latency_ms |
 | `Order Canceled` | `exchange` / `orders` | order_id, symbol, side, order_type |
 | `Orders Filter Changed` | `orders` | filter |
-| `Wallet Mode Changed` | `wallet` | mode |
+| `Wallet Mode Changed` / `Wallet Quick Amount Clicked` | `wallet` | mode / amount |
 | `Wallet Deposit Completed` | `wallet` | asset, amount, balance_after |
 | `Wallet Withdraw Completed` / `Failed` | `wallet` | asset, amount, balance_after / failure_reason |
+| `Empty State CTA Clicked` | `portfolio` | destination |
 | `Account Reset` | `portfolio` | user_tier |
 
 ### Experiment 데모
