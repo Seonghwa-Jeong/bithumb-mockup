@@ -83,7 +83,14 @@ export default function Wallet() {
             </label>
             <div className="quick-row">
               {QUICK.map((q) => (
-                <button type="button" key={q} onClick={() => setAmount(String((Number(amount) || 0) + q))}>
+                <button
+                  type="button"
+                  key={q}
+                  onClick={() => {
+                    setAmount(String((Number(amount) || 0) + q))
+                    track('Wallet Quick Amount Clicked', { amount: q, mode, location: 'wallet' })
+                  }}
+                >
                   +{formatKRW(q, { withUnit: false })}
                 </button>
               ))}
