@@ -178,6 +178,17 @@ __bithumbExp.forcePayload('welcome-bonus', { amount_krw: 2000000 })
 __bithumbExp.forcePayload('market-hero', { title: '여름 이벤트 진행중', cta: '지금 가입' })
 ```
 
+## 시드 데이터 (Amplitude 전송)
+
+`scripts/seed-amplitude.mjs` 가 태그된 이벤트 기반의 자연스러운 사용자 플로우(13개 시나리오·긍정/부정 분기)를 시뮬레이션해 Amplitude HTTP Batch API 로 대량 전송합니다. 기간 2026-06-01~08-31(KST), `$exposure` 로 실험 노출·등급 진화까지 포함.
+
+```bash
+node scripts/seed-amplitude.mjs --users 20 --dry-run   # 전송 없이 통계/샘플
+node scripts/seed-amplitude.mjs --users 1000           # 전송 (~14만 이벤트)
+```
+
+키는 `.env.local`(`VITE_AMPLITUDE_API_KEY`) 또는 `AMPLITUDE_API_KEY` 에서 읽습니다. 이벤트 단위 `insert_id` 로 멱등 처리.
+
 ## 폴더 구조
 
 ```
