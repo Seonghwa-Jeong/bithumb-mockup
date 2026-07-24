@@ -127,12 +127,39 @@ export function getVariant(flagKey, fallback = 'control') {
   return forced || fallback
 }
 
+/**
+ * Remote Config 조회 — 변형의 payload(원격에서 제어하는 값)를 반환.
+ * Amplitude 대시보드에서 payload 를 바꾸면 재배포 없이 값이 바뀝니다.
+ * fallback 위에 원격 payload 를 병합하므로, 일부 키만 원격 지정해도 됩니다.
+ */
+export function getPayload(flagKey, fallback = {}) {
+  if (experimentClient) {
+    const v = experimentClient.variant(flagKey)
+    if (v && v.payload && typeof v.payload === 'object') {
+      return { ...fallback, ...v.payload }
+    }
+  }
+  // 데모 모드: localStorage 로 payload 를 강제해 눈으로 확인 가능
+  try {
+    const forced = localStorage.getItem(`exp_payload_${flagKey}`)
+    if (forced) return { ...fallback, ...JSON.parse(forced) }
+  } catch {
+    /* ignore malformed */
+  }
+  return fallback
+}
+
 /** 데모용: 특정 플래그 변형을 강제 지정 (개발자 콘솔에서 호출 가능) */
 export function forceVariant(flagKey, value) {
   localStorage.setItem(`exp_force_${flagKey}`, value)
 }
 
-// 콘솔에서 손쉽게 A/B 를 토글할 수 있도록 전역 노출 (데모 편의)
+/** 데모용: 특정 플래그 payload(remote config) 를 강제 지정 */
+export function forcePayload(flagKey, payloadObj) {
+  localStorage.setItem(`exp_payload_${flagKey}`, JSON.stringify(payloadObj))
+}
+
+// 콘솔에서 손쉽게 A/B·remote config 를 토글할 수 있도록 전역 노출 (데모 편의)
 if (typeof window !== 'undefined') {
-  window.__bithumbExp = { getVariant, forceVariant, fetchExperiment }
+  window.__bithumbExp = { getVariant, getPayload, forceVariant, forcePayload, fetchExperiment }
 }

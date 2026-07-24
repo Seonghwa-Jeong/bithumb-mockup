@@ -140,22 +140,34 @@ VITE_EXPERIMENT_DEPLOYMENT_KEY=<Experiment "Web"(client-side) Deployment Key>
 | `Wallet Withdraw Completed` / `Failed` | `wallet` | asset, amount, balance_after / failure_reason |
 | `Account Reset` | `portfolio` | user_tier |
 
-### Experiment (A/B) 데모
+### Experiment 데모
 
-두 개의 플래그를 사용합니다.
+**① 변형(variant) 기반 A/B**
 
 - `login-headline` — 로그인 화면 헤드라인 문구 (`control` / `treatment`)
-- `buy-cta` — 매수 버튼 문구·강조 (`control` / `treatment`)
+
+**② Remote Config(변형 payload) — 재배포 없이 값을 원격 제어**
+
+각 변형의 payload(JSON)로 실제 값을 내려받습니다. 대시보드에서 payload 만 바꾸면 앱이 즉시 반영합니다.
+
+| 플래그 | payload 스키마 | 제어 대상 |
+| --- | --- | --- |
+| `buy-cta` | `{ "label": "지금 매수하기", "emphasis": true }` | 매수 버튼 문구·강조 (로그인 사용자) |
+| `welcome-bonus` | `{ "amount_krw": 2000000 }` | 신규 가입 축하금 (가입 퍼널) |
+| `market-hero` | `{ "eyebrow": "...", "title": "...", "body": "...", "cta": "..." }` | 비로그인 랜딩 히어로 |
+
+payload 미지정 키는 코드의 fallback 값이 그대로 쓰입니다(부분 지정 가능).
 
 **Experiment 재평가(fetch) 시점** — identity/사용자 속성이 바뀌는 모든 지점에서 `fetchExperiment()` 를 호출합니다: 앱 첫 로딩 · 로그인 · 로그아웃 · 회원가입 · 계좌 등록(초기화) · 세션 타임아웃.
 
-Experiment 키가 없을 때도 콘솔에서 변형을 강제로 바꿔 눈으로 A/B 를 확인할 수 있습니다.
+키가 없을 때도 콘솔에서 변형·payload 를 강제해 눈으로 확인할 수 있습니다.
 
 ```js
-// 브라우저 콘솔에서
-__bithumbExp.forceVariant('buy-cta', 'treatment')   // 또는 'control'
-__bithumbExp.forceVariant('login-headline', 'treatment')
-// 이후 새로고침
+// 브라우저 콘솔에서 (이후 새로고침)
+__bithumbExp.forceVariant('login-headline', 'treatment')          // variant 강제
+__bithumbExp.forcePayload('buy-cta', { label: '지금 매수하기', emphasis: true })
+__bithumbExp.forcePayload('welcome-bonus', { amount_krw: 2000000 })
+__bithumbExp.forcePayload('market-hero', { title: '여름 이벤트 진행중', cta: '지금 가입' })
 ```
 
 ## 폴더 구조
