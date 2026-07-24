@@ -4,7 +4,7 @@ import { useMarket } from '../context/MarketContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { COIN_MAP, tickSize } from '../lib/market.js'
 import { formatKRW, formatCoin, formatPrice } from '../lib/format.js'
-import { getVariant, track } from '../lib/amplitude.js'
+import { getPayload, track } from '../lib/amplitude.js'
 
 const PERCENTS = [10, 25, 50, 100]
 const FEE_RATE = 0.0004
@@ -35,9 +35,9 @@ export default function TradePanel({ symbol, pickedPrice }) {
     if (orderType === 'market') setPrice(t.price)
   }, [orderType, t.price])
 
-  // Amplitude Experiment 데모: 매수 버튼 문구/강조 A/B
-  const ctaVariant = getVariant('buy-cta', 'control')
-  const buyLabel = ctaVariant === 'treatment' ? '지금 매수하기' : '매수'
+  // Amplitude Experiment(remote config): 매수 버튼 문구/강조를 payload 로 원격 제어
+  const buyCta = getPayload('buy-cta', { label: '매수', emphasis: false })
+  const buyLabel = buyCta.label || '매수'
 
   const effectivePrice = orderType === 'market' ? t.price : Number(price) || 0
   const amountNum = Number(amount) || 0
@@ -191,7 +191,7 @@ export default function TradePanel({ symbol, pickedPrice }) {
         {user ? (
           <button
             type="submit"
-            className={`btn-order ${side} ${ctaVariant === 'treatment' ? 'emphasis' : ''}`}
+            className={`btn-order ${side} ${side === 'buy' && buyCta.emphasis ? 'emphasis' : ''}`}
           >
             {side === 'buy' ? buyLabel : '매도'}
           </button>

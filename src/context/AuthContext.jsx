@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { findAccount, TEST_ACCOUNTS } from '../lib/accounts.js'
-import { identifyUser, resetUser, track } from '../lib/amplitude.js'
+import { identifyUser, resetUser, track, getPayload } from '../lib/amplitude.js'
 
 const AuthContext = createContext(null)
 const STORAGE_KEY = 'bithumb_auth_user'
@@ -84,12 +84,14 @@ export function AuthProvider({ children }) {
       track('Signup Failed', { failure_reason: 'email_exists', location: 'signup_page' })
       return { ok: false, error: '이미 가입된 이메일입니다.' }
     }
+    // Remote config: 신규 가입 축하금을 원격에서 제어 (재배포 없이 금액 실험)
+    const welcomeBonus = getPayload('welcome-bonus', { amount_krw: 1_000_000 }).amount_krw
     const newUser = {
       id: `user_${Date.now()}`,
       email,
       nickname,
       password,
-      krw: 1_000_000, // 신규 가입 축하금
+      krw: welcomeBonus, // 신규 가입 축하금 (remote config)
       monthlyVolume: 0, // 신규 → 전월 거래금액 0 → 화이트
       tier: 'WHITE',
       source: 'signup',
@@ -99,7 +101,7 @@ export function AuthProvider({ children }) {
     setUser(safe)
     track('Signup Completed', {
       user_tier: 'WHITE',
-      welcome_bonus_krw: 1_000_000,
+      welcome_bonus_krw: welcomeBonus,
       location: 'signup_page',
     })
     return { ok: true }

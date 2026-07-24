@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-import { track } from '../lib/amplitude.js'
+import { track, getPayload } from '../lib/amplitude.js'
+import { formatKRW } from '../lib/format.js'
 
 export default function Signup() {
   const { signup } = useAuth()
@@ -9,6 +10,9 @@ export default function Signup() {
 
   const [form, setForm] = useState({ email: '', nickname: '', password: '', confirm: '', agree: false })
   const [error, setError] = useState('')
+
+  // Remote config: 웰컴 보너스 금액 (AuthContext.signup 과 동일 플래그)
+  const welcomeBonus = getPayload('welcome-bonus', { amount_krw: 1_000_000 }).amount_krw
 
   function set(key, value) {
     setForm((f) => ({ ...f, [key]: value }))
@@ -46,7 +50,7 @@ export default function Signup() {
           <span className="logo-mark lg">B</span>
           <h1>회원가입</h1>
         </div>
-        <p className="auth-headline">가입하면 실습용 원화 1,000,000원을 드려요</p>
+        <p className="auth-headline">가입하면 실습용 원화 {formatKRW(welcomeBonus)}을 드려요</p>
 
         <form onSubmit={submit} className="auth-form">
           <label>

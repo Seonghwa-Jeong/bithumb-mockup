@@ -4,7 +4,7 @@ import { useMarket } from '../context/MarketContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { COIN_MAP } from '../lib/market.js'
 import { formatPrice, formatPct, formatVolume } from '../lib/format.js'
-import { track } from '../lib/amplitude.js'
+import { track, getPayload } from '../lib/amplitude.js'
 import Sparkline from '../components/Sparkline.jsx'
 
 const SORTS = [
@@ -18,6 +18,14 @@ export default function Market() {
   const { coins, tickers } = useMarket()
   const { user } = useAuth()
   const navigate = useNavigate()
+
+  // Remote config: 비로그인 랜딩 히어로 배너 문구/CTA 를 원격 제어
+  const hero = getPayload('market-hero', {
+    eyebrow: 'No.1 디지털 자산 거래소',
+    title: '대한민국 대표 디지털 자산 거래소, bithumb',
+    body: '로그인 없이 실시간 시세를 먼저 둘러보세요. 지금 가입하면 실습용 원화 1,000,000원을 드려요.',
+    cta: '회원가입하고 시작하기',
+  })
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState({ key: 'volume24', dir: 'desc' })
   const [favorites, setFavorites] = useState(() => {
@@ -91,12 +99,9 @@ export default function Market() {
       {!user && (
         <section className="promo-hero">
           <div className="promo-text">
-            <span className="promo-eyebrow">No.1 디지털 자산 거래소</span>
-            <h1>대한민국 대표 디지털 자산 거래소, bithumb</h1>
-            <p>
-              로그인 없이 실시간 시세를 먼저 둘러보세요. 지금 가입하면 실습용 원화
-              1,000,000원을 드려요.
-            </p>
+            <span className="promo-eyebrow">{hero.eyebrow}</span>
+            <h1>{hero.title}</h1>
+            <p>{hero.body}</p>
             <div className="promo-cta">
               <button
                 className="btn-primary"
@@ -105,7 +110,7 @@ export default function Market() {
                   navigate('/signup')
                 }}
               >
-                회원가입하고 시작하기
+                {hero.cta}
               </button>
               <button
                 className="btn-ghost"
